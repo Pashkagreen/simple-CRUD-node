@@ -1,25 +1,75 @@
-import { Product, products } from './product';
+import * as UserService from '../services/index.js';
+import { User } from '../interfaces/users.interface.js';
+import { v4 as uuidv4 } from 'uuid';
 
-export const getAllProducts = async (): Promise<Product[]> => {
-  return products;
-};
+export const getUsersList = async (req: any, res: any) => {
+  const usersList: User[] = await UserService.getAllUsers();
+  console.log(`in get ${JSON.stringify(usersList)}`);
 
-export const createProducts = async (product: Product): Promise<void> => {
-  products.push(product);
-};
-
-export const updateProducts = async (product: Product): Promise<void> => {
-  let index = products.findIndex((d) => d.id === product['id']);
-  if (index > 0 || index == 0) {
-    products[index]['productName'] = product['productName'];
-    products[index]['productCode'] = product['productCode'];
-    products[index]['prodRating'] = product['prodRating'];
+  try {
+    res.status(200).send(usersList);
+  } catch (e: any) {
+    res.status(404).send(e.message);
   }
 };
 
-export const deleteProducts = async (id: number): Promise<void> => {
-  console.log(`in delete product index is ${JSON.stringify(id)}`);
-  let index = products.findIndex((d) => d.id === id);
-  console.log(`in delete product index is ${index}`);
-  if (index > 0 || index == 0) products.splice(index, 1);
+export const getUser = async (req: any, res: any) => {
+  const { userId } = req.query;
+  const user: User = await UserService.getUser(userId);
+  console.log(`in getUser ${JSON.stringify(user)}`);
+
+  try {
+    res.status(200).send(user);
+  } catch (e: any) {
+    res.status(404).send(e.message);
+  }
+};
+
+export const createUser = async (req: any, res: any) => {
+  const user: User = req.body;
+
+  if (!user.id) {
+    user.id = +uuidv4(); // ⇨ '9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d'
+  }
+
+  await UserService.createUser(user);
+  try {
+    res.status(201).send({
+      message: 'Successfully added',
+      IsSuccess: true,
+      result: user,
+    });
+  } catch (e: any) {
+    res.status(404).send(e.message);
+  }
+};
+
+export const updateUser = async (req: any, res: any) => {
+  const user: User = req.body;
+
+  await UserService.updateUser(user);
+  try {
+    res.status(200).send({
+      message: 'Successfully updated',
+      IsSuccess: true,
+      result: user,
+    });
+  } catch (e: any) {
+    res.status(404).send(e.message);
+  }
+};
+
+export const deleteUser = async (req: any, res: any) => {
+  const { userId } = req.query;
+
+  await UserService.deleteUser(userId);
+  try {
+    res.status(204).send({
+      message: 'Successfully deleted',
+      IsSuccess: true,
+      result: '',
+    });
+  } catch (e: any) {
+    res.status(404).send(e.message);
+  }
 };
