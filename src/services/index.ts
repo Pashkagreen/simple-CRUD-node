@@ -4,7 +4,7 @@ const getAllUsers = async (): Promise<User[]> => {
   return users;
 };
 
-const getUser = async (userId: number): Promise<User> => {
+const getUser = async (userId: number | string | undefined): Promise<User> => {
   return users.filter((i) => i.id === userId)[0];
 };
 
@@ -18,10 +18,10 @@ const updateUser = async (user: User): Promise<void> => {
     users[index]['username'] = user['username'];
     users[index]['age'] = user['age'];
     users[index]['hobbies'] = user['hobbies'];
-  }
+  } else return Promise.reject();
 };
 
-const deleteUser = async (userId: number): Promise<void> => {
+const deleteUser = async (userId: number | string | undefined): Promise<void> => {
   console.log(`in delete user index is ${JSON.stringify(userId)}`);
 
   let index = users.findIndex((d) => d.id === userId);

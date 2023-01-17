@@ -1,5 +1,5 @@
 export interface User {
-  id: number | null;
+  id: number | string | null;
   username: string;
   age?: number;
   hobbies: string[] | [];
@@ -25,7 +25,7 @@ export const users: User[] = [
     hobbies: ['Dancing', 'Walking'],
   },
   {
-    id: 1,
+    id: 4,
     username: 'Valery',
     age: 54,
     hobbies: ['Twitch'],
