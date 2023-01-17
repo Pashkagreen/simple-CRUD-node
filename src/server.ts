@@ -8,9 +8,6 @@ const requestHandler = (req: any, res: any) => {
   const queryObject = url.parse(req.url!, true).path;
   const userId = queryObject?.split('/').slice(-1).join();
 
-  console.log('queryObj', queryObject);
-  console.log('userId', userId);
-
   if (queryObject?.includes('/users')) {
     switch (method) {
       case GET:
